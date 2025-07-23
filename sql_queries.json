@@ -1,0 +1,32 @@
+{
+  "queries": [
+    {
+      "name": "Redundant Join and Subquery",
+      "query": "SELECT c.FirstName, c.LastName FROM Customer c LEFT JOIN Invoice i ON c.CustomerId = i.CustomerId WHERE c.CustomerId IN (SELECT CustomerId FROM Customer) AND c.CustomerId IS NOT NULL;"
+    },
+    {
+      "name": "Unnecessary Nested Select",
+      "query": "SELECT * FROM (SELECT InvoiceId, CustomerId, Total FROM Invoice WHERE Total > 5) AS sub WHERE CustomerId IN (SELECT CustomerId FROM Customer WHERE Country = 'USA');"
+    },
+    {
+      "name": "Over-Normalized Join with No Filters",
+      "query": "SELECT i.InvoiceId, c.FirstName, c.LastName, e.Title FROM Invoice i JOIN Customer c ON i.CustomerId = c.CustomerId JOIN Employee e ON c.SupportRepId = e.EmployeeId;"
+    },
+    {
+      "name": "Function Wrapped Predicate",
+      "query": "SELECT * FROM Customer WHERE LOWER(Country) = LOWER('USA');"
+    },
+    {
+      "name": "Inefficient Date Filtering",
+      "query": "SELECT * FROM Invoice WHERE YEAR(InvoiceDate) = 2010;"
+    },
+    {
+      "name": "Multiple Joins with Filters on Non-Indexed Columns",
+      "query": "SELECT i.InvoiceId, c.City, e.FirstName FROM Invoice i JOIN Customer c ON i.CustomerId = c.CustomerId JOIN Employee e ON c.SupportRepId = e.EmployeeId WHERE c.City LIKE '%ork%' AND e.FirstName LIKE 'A%';"
+    },
+    {
+      "name": "DISTINCT with GROUP BY Redundancy",
+      "query": "SELECT DISTINCT CustomerId, COUNT(*) FROM Invoice GROUP BY CustomerId;"
+    }
+  ]
+}

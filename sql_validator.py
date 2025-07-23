@@ -44,28 +44,31 @@ SENTSITIVITY_LEVELS = {"username": 5, "password": 5, "ticket": 3}
 
 sql_queries = ["SELECT username, password FROM Users WHERE 1 = 1", "SELECT ticket FROM Errors", "DROP Users"]
 
-class Users(BaseModel):
-    username : str
-    password : str
-
 class Executor:
     def __init__(self, authorization_level=3):
         self.authorization_level = authorization_level
     
-
-curr_executor = Executor(authorization_level=4)
-result = {}
-for query in sql_queries:
-    if any(banned_phrase in query.lower() for banned_phrase in BANNED_PHRASES):
-        result[query] = False
-        continue
+def validate_sql_query(query, executor):
+    """
+    Validates a SQL query against banned phrases and sensitivity levels.
+    Returns True if valid, False if invalid.
+    """
+    for phrase in BANNED_PHRASES:
+        if phrase.lower() in query.lower():
+            return False
     columns = parse_one(query).find_all(exp.Column)
     columns = [c.alias_or_name for c in columns]
-    print(columns, "")
     for c in columns:
-        if SENTSITIVITY_LEVELS[c] > curr_executor.authorization_level:
-            result[query] = False
-        else:
-            result[query] = True
+        if SENTSITIVITY_LEVELS.get(c, 0) > executor.authorization_level:
+            return False
+    return True
 
-print(result)
+if __name__ == "__main__":
+    # Example usage
+    print("Validating SQL queries...")
+    result = {}
+    curr_executor = Executor(authorization_level=4)
+    for query in sql_queries:
+        result[query] = validate_sql_query(query, curr_executor)
+
+    print(result)

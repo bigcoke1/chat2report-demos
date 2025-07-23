@@ -2,7 +2,7 @@ import re
 import requests
 from urllib.parse import quote
 
-PROMETHEUS_URL = "http://localhost:9090"  # Replace with your Prometheus/VictoriaMetrics endpoint
+PROMETHEUS_URL = "http://localhost:9090"  # Replace with your endpoint
 DEFAULT_LOOKBEHIND = "1h"
 DEFAULT_TIMERANGE = "24h"
 
