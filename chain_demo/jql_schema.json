@@ -1,0 +1,34 @@
+{
+  "fields": [
+    {
+      "name": "project",
+      "type": "string",
+      "description": "The project key or name (e.g., TIKV, TIDB)"
+    },
+    {
+      "name": "status",
+      "type": "string",
+      "description": "The current status of the issue (e.g., Open, Done, In Progress)"
+    },
+    {
+      "name": "priority",
+      "type": "string",
+      "description": "The priority level (e.g., High, Medium, Low, Critical)"
+    },
+    {
+      "name": "assignee",
+      "type": "user",
+      "description": "User assigned to the issue"
+    },
+    {
+      "name": "created",
+      "type": "datetime",
+      "description": "Timestamp when the issue was created"
+    },
+    {
+      "name": "issueType",
+      "type": "string",
+      "description": "Type of issue (e.g., Bug, Task, Story)"
+    }
+  ]
+}

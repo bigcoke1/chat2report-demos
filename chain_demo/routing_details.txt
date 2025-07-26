@@ -1,0 +1,7 @@
+Use SQL when the question involves structured business data like customers, invoices, or product information.
+
+Use PromQL when the question is about system monitoring metrics such as CPU usage, memory, uptime, or request counts.
+
+Use JiraQL when the question relates to issues, tickets, statuses, or anything tracked in Jira projects.
+
+Use Text when the question is asking for a summary, description, or explanation not tied to a structured data query.

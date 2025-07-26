@@ -1,0 +1,24 @@
+{
+  "metrics": [
+    {
+      "name": "up",
+      "description": "Whether the target is up (1) or down (0)",
+      "labels": ["job", "instance"]
+    },
+    {
+      "name": "node_cpu_seconds_total",
+      "description": "Total seconds the CPU spent in each mode",
+      "labels": ["cpu", "mode", "instance", "job"]
+    },
+    {
+      "name": "node_memory_MemAvailable_bytes",
+      "description": "Amount of memory available",
+      "labels": ["instance", "job"]
+    },
+    {
+      "name": "http_requests_total",
+      "description": "Total number of HTTP requests",
+      "labels": ["method", "handler", "code"]
+    }
+  ]
+}

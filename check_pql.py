@@ -21,7 +21,7 @@ def evaluate_helper_query(metric, window, func):
     else:
         raise RuntimeError(f"Query failed: {resp}")
 
-def optimize_promql(query):
+def suggest_pql_optimizations(query):
     print(f"🔍 Analyzing query: {query}")
     metric_ranges = extract_metric_and_range(query)
 
@@ -37,13 +37,13 @@ def optimize_promql(query):
 
             # Optimization hints
             if ts_count > 10000:
-                print("⚠️ Too many time series! Try narrowing with label filters.")
+                return "⚠️ Too many time series! Try narrowing with label filters."
             if sample_count > 1e8:
-                print("⚠️ Too many samples! Consider reducing the window or increasing Grafana resolution.")
+                return "⚠️ Too many samples! Consider reducing the window or increasing Grafana resolution."
 
         except Exception as e:
             print(f"Error analyzing {metric}: {e}")
 
 if __name__ == "__main__":
     test_query = 'avg(rate(http_requests_total[5m])) by (job)'
-    optimize_promql(test_query)
+    suggest_pql_optimizations(test_query)
