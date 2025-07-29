@@ -3,29 +3,38 @@ import json
 import time
 import mysql.connector
 import os
+import re
 
+def strip_code_fencing(query):
+    return re.sub(r"```(?:sql)?\s*", "", query).strip("` \n")
 
-def explain_sql_query(query):
+def execute_sql_query(query):
     """
-    Returns the execution plan for a SQL query.
+    Executes a SQL query and returns the result.
     """
+    query = strip_code_fencing(query)
+    print(f"Executing query: {query}")
     try:
         conn = get_mysql_connection()
         cursor = conn.cursor()
-        cursor.execute(f"EXPLAIN {query}")
+        cursor.execute(query)
         result = cursor.fetchall()
         cursor.close()
         conn.close()
         return result
     except Exception as e:
-        print(f"Error explaining query: {e}")
+        print(f"Error executing query: {e}")
         return None
+    
+def explain_sql_query(query):
+    return execute_sql_query(f"EXPLAIN {query}")
 
 def optimize_sql_query(query):
     """
     Optimizes a SQL query using sqlglot's optimizer.
     Returns the optimized query as a string.
     """
+    query = strip_code_fencing(query)
     try:
         parsed_query = parse_one(query, read="mysql")
         optimized_query = optimizer.optimize(parsed_query)
@@ -90,5 +99,28 @@ def benchmark_queries(queries):
     conn.close()
 
 if __name__ == "__main__":
-    queries = load_sql_queries("sql_queries.json")
-    benchmark_queries(queries)
+    try:
+        conn = get_mysql_connection()
+        cursor = conn.cursor()
+        cursor.execute("""EXPLAIN SELECT
+                        T1.FirstName,
+                        T1.LastName
+                        FROM Customer AS T1
+                        INNER JOIN Invoice AS T2
+                        ON T1.CustomerId = T2.CustomerId
+                        WHERE
+                        T1.Country = 'USA'
+                        GROUP BY
+                        T1.CustomerId,
+                        T1.FirstName,
+                        T1.LastName
+                        HAVING
+                        SUM(T2.Total) > 10;""")
+        print("Executing query:")
+        result = cursor.fetchall()
+        for row in result:
+            print(row)
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(f"Error executing query: {e}")

@@ -34,7 +34,7 @@ def suggest_jql_optimizations(jql_query: str):
     if len(jql_query.split("AND")) + len(jql_query.split("OR")) > 4:
         suggestions.append("💡 Build the query clause-by-clause to detect which parts are slow.")
 
-    return suggestions
+    return str(suggestions)
 
 if __name__ == "__main__":
     # Example JQLs to test
